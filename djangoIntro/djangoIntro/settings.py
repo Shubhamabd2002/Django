@@ -38,7 +38,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'intro',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
 ]
+
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS= ['127.0.0.2']
+# Add this line, replacing the path with the one you found in Step 1
+# Use a raw string (prefix with 'r') to handle backslashes correctly in Python
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd" 
+# OR if it was in AppData:
+# NPM_BIN_PATH = r"C:\Users\skshu\AppData\Roaming\npm\npm.cmd" 
+# OR (less likely for npm.cmd, but if it was a Linux-style path with forward slashes)
+# NPM_BIN_PATH = "/c/Program Files/nodejs/npm" # No .cmd needed for Linux-style paths in some contexts
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware'
 ]
 
 ROOT_URLCONF = 'djangoIntro.urls'
@@ -117,6 +132,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
