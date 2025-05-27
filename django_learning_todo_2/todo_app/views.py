@@ -3,6 +3,7 @@ from . import serializers
 from django.http import JsonResponse, HttpResponseBadRequest
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 
 # Create your views here.
 @csrf_exempt
@@ -62,7 +63,7 @@ def delete_todo(request):
             selectedTodo = models.Todo.objects.get(id = data.get('id'))
             if selectedTodo:
                 selectedTodo.delete()
-                return JsonResponse({'message': 'Product Deleted', 'updatedData': serializers.serialize_todo_list(models.Todo.objects.all())}, status = 201)
+                return JsonResponse({'message': 'Product Deleted', 'updatedData': serializers.serialize_todo_list(User.objects.all())}, status = 201)
             else:
                 return JsonResponse({'error': 'Invalid data', 'data': data}, status = 400)
         except models.Todo.DoesNotExist:
