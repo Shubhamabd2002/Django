@@ -4,8 +4,10 @@ from django.http import JsonResponse, HttpResponseBadRequest
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from .decorator import login_req_api
 
 # Create your views here.
+@login_req_api
 @csrf_exempt
 def TodoGet(request, id):
     try:
@@ -16,6 +18,7 @@ def TodoGet(request, id):
         return JsonResponse({'error': 'todo not found'}, status = 404)
     
 @csrf_exempt
+@login_req_api
 def deserialize_todo_create(request):
     if request.method == 'POST':
         try:
@@ -38,6 +41,7 @@ def deserialize_todo_create(request):
     else:
         return JsonResponse({'error': 'Invalid data 123456'}, status = 400)
 
+@login_req_api
 @csrf_exempt
 def update_todo(request):
     if request.method == 'PUT':
@@ -55,6 +59,7 @@ def update_todo(request):
     else: 
         return HttpResponseBadRequest("Only PUT method allowed.")
 
+@login_req_api 
 @csrf_exempt #CSRF (Cross-Site Request Forgery) is a security vulnerability that allows an attacker to perform actions on behalf of a logged-in user without their consent.
 def delete_todo(request):
     if request.method == 'DELETE':

@@ -6,7 +6,7 @@ from .models import Todo
 # admin.site.unregister(Todo)
 
 class TodoAdmin(admin.ModelAdmin):
-    list_display= ('title', 'id')  # Display 'title' and 'id' columns in the list
+    list_display = ('title', 'id',) # Display 'title' and 'id' columns in the list
 
     search_fields = ('id', 'title') # Allowing search by id and title feild
 
