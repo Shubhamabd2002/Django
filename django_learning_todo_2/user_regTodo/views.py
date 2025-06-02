@@ -16,6 +16,7 @@ def userRegestrition(request):
             email = data.get('email')
             password = data.get('password')
             user = utils.createNewUser(username, email, password)
+            print(user.id)
             return JsonResponse({'message': 'User registration successfull', 'user': serializers.UserRegTodo(user)}, status = 201)
         except IntegrityError as e:
             return JsonResponse({"error": str(e)}, status=400)

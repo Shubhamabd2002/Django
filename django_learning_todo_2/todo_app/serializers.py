@@ -1,13 +1,20 @@
+import datetime
 
-from . import models
-from user_regTodo.serializers import UserRegTodo
-
-def TodoSerializers(todo_instance):
-    return {
-        'title': todo_instance.title,
-        'id': todo_instance.id,
-        'user': UserRegTodo(todo_instance.user) if todo_instance.user else None
-    }
-
-def serialize_todo_list(todo_queryset):
-    return [TodoSerializers(todo) for todo in todo_queryset]
+def TodoSerializers(todo_queryset, many=False):
+    if many:
+        return [{
+            'title': todo.title,
+            'id': todo.id,
+            'user': todo.user.id,
+            'due_date': todo.due_date,
+            'is_overdue': todo.is_overdue,
+        } for todo in todo_queryset]
+            
+    else:
+        return {
+            'title': todo_queryset.title,
+            'id': todo_queryset.id,
+            'user': todo_queryset.user.id,
+            'due_date': todo_queryset.due_date,
+            'is_overdue': todo_queryset.is_overdue,
+        }

@@ -5,10 +5,21 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .decorator import login_req_api
+from django.db import connection
+from pprint import pprint
+from django.utils import timezone
+import datetime
 
 # Create your views here.
 @login_req_api
-@csrf_exempt
+def getAllList(request):
+    todo = models.Todo.objects.select_related("user").filter(user = request.user)
+    data = serializers.TodoSerializers(todo, many=True)
+    pprint(connection.queries)
+    
+    return JsonResponse({'data': data},status = 201)
+
+@login_req_api
 def TodoGet(request, id):
     try:
         todo = models.Todo.objects.get(id=id)
@@ -17,18 +28,24 @@ def TodoGet(request, id):
     except models.Todo.DoesNotExist:
         return JsonResponse({'error': 'todo not found'}, status = 404)
     
-@csrf_exempt
 @login_req_api
+@csrf_exempt
 def deserialize_todo_create(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print(data, '23456')
             title =  data.get('title')
 
             if not title:
                 return JsonResponse({'error': 'title is required field'}, status = 404)
             try:
-                todo = models.Todo(title = title)
+                todo = models.Todo(
+                    title = title,
+                    user = request.user,
+                    due_date = datetime.date.today()
+                )
+                print(todo, 'todo instance')
                 todo.save()
 
                 serializers_data = serializers.TodoSerializers(todo)
@@ -68,7 +85,7 @@ def delete_todo(request):
             selectedTodo = models.Todo.objects.get(id = data.get('id'))
             if selectedTodo:
                 selectedTodo.delete()
-                return JsonResponse({'message': 'Product Deleted', 'updatedData': serializers.serialize_todo_list(User.objects.all())}, status = 201)
+                return JsonResponse({'message': 'Product Deleted', 'updatedData': serializers.TodoSerializers(models.Todo.objects.all(), many=True)}, status = 201)
             else:
                 return JsonResponse({'error': 'Invalid data', 'data': data}, status = 400)
         except models.Todo.DoesNotExist:

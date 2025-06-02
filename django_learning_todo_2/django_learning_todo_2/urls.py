@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('todo/', include('todo_app.urls')),
     path('registration/', include('user_regTodo.urls')),
+    path('silk/', include('silk.urls', namespace='silk'))
 ]
